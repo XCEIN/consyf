@@ -1,0 +1,23 @@
+import { Router } from 'express';
+import posts from './posts.js';
+import companies from './companies.js';
+import match from './match.js';
+import auth from './auth.js';
+import profile from './profile.js';
+import news from './news.js';
+import promotions from './promotions.js';
+import jobs from './jobs.js';
+import support from './support.js';
+import notifications from './notifications.js';
+
+export const router = Router();
+router.use('/auth', auth);
+router.use('/posts', posts);
+router.use('/companies', companies);
+router.use('/match', match);
+router.use('/profile', profile);
+router.use('/news', news);
+router.use('/promotions', promotions);
+router.use('/jobs', jobs);
+router.use('/support', support);
+router.use('/notifications', notifications);

@@ -1,0 +1,322 @@
+"use client";
+
+import Button from "@/components/commons/button";
+import Input from "@/components/commons/input";
+import Label from "@/components/commons/label";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
+import Textarea from "@/components/ui/textarea";
+
+export default function ProjectSection() {
+  const headerModal = useModal(false);
+  const [headerData, setHeaderData] = useState<ProjectHeaderData | null>(null);
+
+  const contentModal = useModal(false);
+  const [contentData, setContentData] = useState<ProjectContentData | null>(
+    null
+  );
+
+  const investmentModal = useModal(false);
+  const [investmentData, setInvestmentData] =
+    useState<ProjectInvestmentData | null>(null);
+
+  const descModal = useModal(false);
+  const [descData, setDescData] = useState<ProjectDescriptionData | null>(null);
+  return (
+    <>
+      {/* Dialog for edit  */}
+      <>
+        <EditProjectHeaderDialog
+          useModal={headerModal}
+          data={headerData}
+          setData={setHeaderData}
+        />
+        <EditProjectContentDialog
+          useModal={contentModal}
+          data={contentData}
+          setData={setContentData}
+        />
+        <EditProjectInvestmentDialog
+          data={investmentData}
+          setData={setInvestmentData}
+          useModal={investmentModal}
+        />
+        <EditProjectDescDialog
+          data={descData}
+          setData={setDescData}
+          useModal={descModal}
+        />
+      </>
+      <div
+        className={cn(
+          "rounded-[20px] border",
+          "px-8 py-6",
+          "flex flex-col gap-6"
+        )}
+      >
+        {/* Header  */}
+        <div className={cn("relative flex flex-wrap justify-between gap-6")}>
+          <div className={cn("flex flex-col gap-6")}>
+            <h1
+              className={cn(
+                "font-semibold text-[30px] text-app-neutral-gray2",
+                {
+                  "text-black": headerData !== null,
+                }
+              )}
+            >
+              {headerData ? headerData.name : "Tên dự án*"}
+            </h1>
+            <div className="flex gap-2">
+              {headerData ? (
+                getFieldsLabel(headerData.fields).map((f, i) => {
+                  return (
+                    <span
+                      key={i}
+                      className="text-sm px-2 py-1 text-app-blue bg-blue-50 rounded-[4px]"
+                    >
+                      {f}
+                    </span>
+                  );
+                })
+              ) : (
+                <span className="text-sm px-2 py-1 text-app-neutral-gray3 bg-app-neutral-gray6 rounded-[4px]">
+                  Lĩnh vực hoạt động*
+                </span>
+              )}
+            </div>
+          </div>
+          <div>
+            <ButtonEdit onClick={headerModal.open}>Chỉnh sửa</ButtonEdit>
+          </div>
+        </div>
+        {/* Content  */}
+        <div
+          className={cn(
+            "py-6 border-y",
+            "flex flex-col lg:flex-row gap-4 lg:gap-8 lg:flex-wrap justify-between relative"
+          )}
+        >
+          <div className="flex flex-col gap-4 lg:gap-8">
+            <p>
+              <span className="text-app-neutral-gray2">Ngày đăng: </span>
+              <span
+                className={cn("text-app-neutral-gray4", {
+                  "text-black": contentData !== null,
+                })}
+              >
+                {" "}
+                Chưa có
+              </span>
+            </p>
+            <p>
+              <span className="text-app-neutral-gray2">Ngày kết thúc: </span>
+              <span
+                className={cn("text-app-neutral-gray4", {
+                  "text-black": contentData !== null,
+                })}
+              >
+                {" "}
+                Chưa có
+              </span>
+            </p>
+          </div>
+          <div className="flex flex-col gap-4 lg:gap-8">
+            <p>
+              <span className="text-app-neutral-gray2">Địa chỉ: </span>
+              <span
+                className={cn("text-app-neutral-gray4", {
+                  "text-black": contentData !== null,
+                })}
+              >
+                {contentData
+                  ? getLocationsLabel(contentData.locations).map((l, i) => (
+                      <span key={i}>
+                        {i === 0 ? "" : ", "}
+                        {l}
+                      </span>
+                    ))
+                  : " Chưa có"}
+              </span>
+            </p>
+            <p>
+              <span className="text-app-neutral-gray2">Email: </span>
+              <span
+                className={cn("text-app-neutral-gray4", {
+                  "text-black": contentData !== null,
+                })}
+              >
+                {contentData ? contentData.email : "Chưa có"}
+              </span>
+            </p>
+          </div>
+          <div className="flex flex-col gap-4 lg:gap-8">
+            <p>
+              <span className="text-app-neutral-gray2">Website: </span>
+              <span
+                className={cn("text-app-neutral-gray4", {
+                  "text-blue-800 underline": contentData !== null,
+                })}
+              >
+                {contentData ? contentData.website : "Chưa có"}
+              </span>
+            </p>
+            <p>
+              <span className="text-app-neutral-gray2">Portfolio: </span>
+              <span
+                className={cn("text-app-neutral-gray4", {
+                  "text-blue-800 underline": contentData !== null,
+                })}
+              >
+                {contentData ? contentData.portfolio : "Chưa có"}
+              </span>
+            </p>
+          </div>
+          <div>
+            <ButtonEdit onClick={contentModal.open}>Chỉnh sửa</ButtonEdit>
+          </div>
+        </div>
+        {/* Description  */}
+        <div className={cn("hidden lg:flex justify-end items-center")}>
+          <ButtonEdit onClick={descModal.open}>Chỉnh sửa</ButtonEdit>
+        </div>
+        <div>
+          {descData ? (
+            <div
+              className="html-view break-all"
+              dangerouslySetInnerHTML={{ __html: descData.description }}
+            ></div>
+          ) : (
+            <div className="text-app-neutral-gray3 h-[360px]">
+              Mô tả: Chưa có*
+            </div>
+          )}
+        </div>
+        {/* Investment  */}
+        <div
+          className={cn(
+            "pt-6 border-t flex flex-wrap justify-between gap-8 relative"
+          )}
+        >
+          <div
+            className={cn(
+              "flex-1 flex flex-col lg:flex-row lg:flex-wrap justify-between"
+            )}
+          >
+            <div className="space-y-3">
+              <p
+                className={cn("text-[20px] text-app-neutral-gray2", {
+                  "text-app-blue": investmentData !== null,
+                })}
+              >
+                Vốn huy động
+              </p>
+              <span
+                className={cn("text-4xl text-app-neutral-gray4", {
+                  "text-blue-800 font-medium": investmentData !== null,
+                })}
+              >
+                {investmentData
+                  ? `${investmentData.investmentValue.toLocaleString(
+                      "vi-VN"
+                    )} ${investmentData.currency}`
+                  : "Chưa có"}
+              </span>
+            </div>
+            <div className="space-y-3">
+              <p
+                className={cn("text-[20px] text-app-neutral-gray2", {
+                  "text-app-blue": investmentData !== null,
+                })}
+              >
+                Đồng sáng lập
+              </p>
+              <div className="flex flex-col">
+                {investmentData ? (
+                  getFundingStageLabel(investmentData.fundingStage).map(
+                    (f, i) => {
+                      return (
+                        <span
+                          className="text-2xl text-blue-800 font-medium"
+                          key={i}
+                        >
+                          {f}
+                        </span>
+                      );
+                    }
+                  )
+                ) : (
+                  <span className={cn("text-2xl text-app-neutral-gray4")}>
+                    Chưa có
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="space-y-3">
+              <p
+                className={cn("text-[20px] text-app-neutral-gray2", {
+                  "text-app-blue": investmentData !== null,
+                })}
+              >
+                Đối tác
+              </p>
+              <div className="flex flex-col">
+                {investmentData ? (
+                  getPartnerLabel(investmentData.partners).map((p, i) => {
+                    return (
+                      <span
+                        className="text-2xl text-blue-800 font-medium"
+                        key={i}
+                      >
+                        {p}
+                      </span>
+                    );
+                  })
+                ) : (
+                  <span className={cn("text-2xl text-app-neutral-gray4")}>
+                    Chưa có
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+          <div>
+            <ButtonEdit onClick={investmentModal.open}>Chỉnh sửa</ButtonEdit>
+          </div>
+        </div>
+      </div>
+      <div className={cn("pt-5 flex justify-center lg:justify-end")}>
+        <div className="flex flex-col gap-6 w-[353px]">
+          <p className="text-center text-app-neutral-gray3 text-sm">
+            Hoàn thành cái trường thông tin để <br />
+            gửi yêu cầu đăng tải dự án
+          </p>
+          <div className="px-8">
+            <Button
+              className={cn("w-full bg-app-neutral-gray4 cursor-not-allowed")}
+            >
+              Gửi yêu cầu
+            </Button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function ButtonEdit({
+  onClick,
+  children,
+}: {
+  onClick: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <ButtonEditComponent
+      onClick={onClick}
+      penClassName="absolute top-4 right-0"
+    >
+      {children}
+    </ButtonEditComponent>
+  );
+}
