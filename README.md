@@ -1,10 +1,10 @@
-# CONSYF - Nền tảng Kết nối Đầu tư và Hợp tác
+# CONSYF - Investment & Collaboration Connection Platform
 
-## 📋 Giới thiệu
+## 📋 Overview
 
-CONSYF là nền tảng kết nối các nhà đầu tư, doanh nghiệp và đối tác tiềm năng. Hệ thống cho phép người dùng đăng dự án, tìm kiếm cơ hội hợp tác và kết nối với các đối tác phù hợp thông qua công nghệ AI.
+CONSYF is a platform that connects investors, businesses, and potential partners. The system allows users to post projects, search for collaboration opportunities, and connect with suitable partners through AI technology.
 
-## 🚀 Công nghệ sử dụng
+## 🚀 Tech Stack
 
 ### Frontend
 - **Next.js 15** - React framework
@@ -23,7 +23,7 @@ CONSYF là nền tảng kết nối các nhà đầu tư, doanh nghiệp và đ�
 - **Multer** - File upload
 - **Gemini AI** - Text embedding & matching
 
-## 📁 Cấu trúc dự án
+## 📁 Project Structure
 
 ```
 consyf-full/
@@ -47,32 +47,32 @@ consyf-full/
     └── uploads/         # Uploaded files
 ```
 
-## 🛠️ Cài đặt và chạy dự án
+## 🛠️ Installation & Setup
 
-### Yêu cầu hệ thống
+### Prerequisites
 - Node.js >= 18.x
 - MySQL >= 8.x
-- XAMPP/LAMPP (nếu sử dụng local MySQL)
+- XAMPP/LAMPP (for local MySQL)
 
-### 1. Clone repository
+### 1. Clone Repository
 ```bash
 git clone <repository-url>
 cd consyf-full
 ```
 
-### 2. Cài đặt Backend
+### 2. Backend Setup
 
 ```bash
 cd backend
 npm install
 ```
 
-#### Cấu hình .env
+#### Configure .env
 ```bash
 cp .env.example .env
 ```
 
-Cập nhật file `.env`:
+Update `.env` file:
 ```env
 PORT=4000
 MYSQL_HOST=127.0.0.1
@@ -93,9 +93,9 @@ SMTP_USER=your-email@gmail.com
 SMTP_PASS=your-app-password
 ```
 
-#### Chạy migrations
+#### Run Migrations
 ```bash
-# Nếu dùng XAMPP/LAMPP
+# If using XAMPP/LAMPP
 /opt/lampp/bin/mysql -u root --socket=/opt/lampp/var/mysql/mysql.sock consyfnew < migrations/001_initial_schema.sql
 /opt/lampp/bin/mysql -u root --socket=/opt/lampp/var/mysql/mysql.sock consyfnew < migrations/002_add_post_images.sql
 /opt/lampp/bin/mysql -u root --socket=/opt/lampp/var/mysql/mysql.sock consyfnew < migrations/003_add_account_type.sql
@@ -103,125 +103,125 @@ SMTP_PASS=your-app-password
 /opt/lampp/bin/mysql -u root --socket=/opt/lampp/var/mysql/mysql.sock consyfnew < migrations/005_create_notifications.sql
 ```
 
-#### Chạy backend
+#### Start Backend
 ```bash
 npm run dev
 ```
 
-Backend sẽ chạy tại: `http://localhost:4000`
+Backend will run at: `http://localhost:4000`
 
-### 3. Cài đặt Frontend
+### 3. Frontend Setup
 
 ```bash
 cd ../consyf-project
 npm install
 ```
 
-#### Cấu hình .env.local
+#### Configure .env.local
 ```bash
 NEXT_PUBLIC_BACKEND_URL=http://localhost:4000
 ```
 
-#### Chạy frontend
+#### Start Frontend
 ```bash
 npm run dev
 ```
 
-Frontend sẽ chạy tại: `http://localhost:3000`
+Frontend will run at: `http://localhost:3000`
 
-## 👤 Tài khoản mặc định
+## 👤 Default Accounts
 
-Sau khi chạy migrations, bạn có thể tạo tài khoản mới hoặc sử dụng các tài khoản test.
+After running migrations, you can create new accounts or use test accounts.
 
 ### Admin
 - Email: admin@consyf.com
-- Password: (cần tạo qua API hoặc database)
+- Password: (create via API or database)
 
-## 📚 Tính năng chính
+## 📚 Key Features
 
-### Người dùng
-- ✅ Đăng ký/Đăng nhập với JWT
-- ✅ 2 loại tài khoản: Cá nhân & Tổ chức
-- ✅ Upload avatar và ảnh dự án
-- ✅ Tạo và quản lý dự án
-- ✅ Tìm kiếm đối tác phù hợp (AI matching)
-- ✅ Nhận thông báo về trạng thái dự án
-- ✅ Chỉnh sửa thông tin cá nhân
+### User Features
+- ✅ Register/Login with JWT
+- ✅ 2 account types: Personal & Organization
+- ✅ Upload avatar and project images
+- ✅ Create and manage projects
+- ✅ Find suitable partners (AI matching)
+- ✅ Receive project status notifications
+- ✅ Edit personal information
 
-### Tài khoản Cá nhân
-- Chỉ được tạo 1 dự án duy nhất
-- Sử dụng avatar làm ảnh đại diện dự án
-- Upload tối đa 5 ảnh mô tả dự án
-- Không thể chuyển sang Tổ chức nếu có bài approved
+### Personal Account
+- Can create only 1 project
+- Uses avatar as project thumbnail
+- Upload up to 5 project description images
+- Cannot switch to Organization if has approved posts
 
-### Tài khoản Tổ chức
-- Tạo không giới hạn số lượng dự án
-- Upload ảnh đại diện riêng cho mỗi dự án
-- Upload tối đa 5 ảnh mô tả cho mỗi dự án
-- Quản lý nhiều dự án trong tab "Quản lý dự án"
-- Chỉnh sửa/xóa dự án
-- Phải xóa hết bài mới chuyển sang Cá nhân
+### Organization Account
+- Create unlimited projects
+- Upload separate thumbnail for each project
+- Upload up to 5 description images per project
+- Manage multiple projects in "Project Management" tab
+- Edit/Delete projects
+- Must delete all posts before switching to Personal
 
-### Admin
-- ✅ Xem tất cả dự án (chờ duyệt, đã duyệt, từ chối)
-- ✅ Duyệt/Từ chối dự án
-- ✅ Tìm kiếm và lọc dự án
-- ✅ Xem chi tiết dự án trong popup
+### Admin Features
+- ✅ View all projects (pending, approved, rejected)
+- ✅ Approve/Reject projects
+- ✅ Search and filter projects
+- ✅ View project details in popup
 
-### Hệ thống thông báo
-- Tự động thông báo khi:
-  - Dự án được tải lên thành công
-  - Admin duyệt dự án
-  - Admin từ chối dự án
-- Hiển thị theo thời gian (Hôm nay, Hôm qua, Trước đó)
-- Đánh dấu đã đọc/chưa đọc
+### Notification System
+- Automatic notifications when:
+  - Project uploaded successfully
+  - Admin approves project
+  - Admin rejects project
+- Display by time (Today, Yesterday, Earlier)
+- Mark as read/unread
 
 ## 🔌 API Endpoints
 
 ### Authentication
-- POST `/api/auth/register` - Đăng ký
-- POST `/api/auth/login` - Đăng nhập
-- POST `/api/auth/forgot-password` - Quên mật khẩu
-- POST `/api/auth/reset-password` - Đặt lại mật khẩu
+- POST `/api/auth/register` - Register new account
+- POST `/api/auth/login` - Login
+- POST `/api/auth/forgot-password` - Forgot password
+- POST `/api/auth/reset-password` - Reset password
 
 ### Posts
-- GET `/api/posts` - Lấy danh sách dự án (public)
-- POST `/api/posts` - Tạo dự án mới
-- GET `/api/posts/user/my` - Lấy dự án của user
-- PUT `/api/posts/:id` - Cập nhật dự án
-- DELETE `/api/posts/:id` - Xóa dự án
-- POST `/api/posts/upload-images` - Upload ảnh dự án
+- GET `/api/posts` - Get projects list (public)
+- POST `/api/posts` - Create new project
+- GET `/api/posts/user/my` - Get user's projects
+- PUT `/api/posts/:id` - Update project
+- DELETE `/api/posts/:id` - Delete project
+- POST `/api/posts/upload-images` - Upload project images
 
 ### Admin
-- GET `/api/posts/admin/all` - Lấy tất cả dự án (admin)
-- PUT `/api/posts/:id/status` - Cập nhật trạng thái dự án
+- GET `/api/posts/admin/all` - Get all projects (admin)
+- PUT `/api/posts/:id/status` - Update project status
 
 ### Profile
-- GET `/api/profile` - Lấy thông tin profile
-- PUT `/api/profile` - Cập nhật profile
+- GET `/api/profile` - Get profile information
+- PUT `/api/profile` - Update profile
 - POST `/api/profile/avatar` - Upload avatar
 
 ### Notifications
-- GET `/api/notifications` - Lấy danh sách thông báo
-- PUT `/api/notifications/:id/read` - Đánh dấu đã đọc
-- PUT `/api/notifications/read-all` - Đánh dấu tất cả đã đọc
+- GET `/api/notifications` - Get notifications list
+- PUT `/api/notifications/:id/read` - Mark as read
+- PUT `/api/notifications/read-all` - Mark all as read
 
 ### Matching (AI)
-- POST `/api/match` - Tìm đối tác phù hợp
+- POST `/api/match` - Find suitable partners
 
-## 📸 Upload Files
+## 📸 File Uploads
 
-### Cấu trúc thư mục uploads
+### Upload Directory Structure
 ```
 backend/uploads/
-├── avatars/        # Avatar người dùng
-└── posts/         # Ảnh dự án
+├── avatars/        # User avatars
+└── posts/         # Project images
 ```
 
-### Giới hạn
-- Kích thước file: Tối đa 5MB
-- Định dạng: PNG, JPG, JPEG
-- Số lượng ảnh mô tả: Tối đa 5 ảnh/dự án
+### Upload Limits
+- File size: Maximum 5MB
+- Format: PNG, JPG, JPEG
+- Description images: Maximum 5 images per project
 
 ## 🎨 UI/UX Features
 
@@ -243,7 +243,7 @@ backend/uploads/
 - Popup chi tiết dự án
 - Overlay mờ nhẹ (10% opacity)
 
-## 🔒 Bảo mật
+## 🔒 Security
 
 - JWT authentication
 - Password hashing (bcrypt)
@@ -254,28 +254,28 @@ backend/uploads/
 
 ## 🐛 Troubleshooting
 
-### Backend không kết nối được MySQL
+### Backend Cannot Connect to MySQL
 ```bash
-# Kiểm tra MySQL đang chạy
+# Check if MySQL is running
 sudo /opt/lampp/lampp status
 
-# Khởi động MySQL
+# Start MySQL
 sudo /opt/lampp/lampp startmysql
 ```
 
-### Port 4000 đã được sử dụng
+### Port 4000 Already in Use
 ```bash
-# Tìm process đang dùng port 4000
+# Find process using port 4000
 lsof -ti:4000
 
 # Kill process
 kill -9 <PID>
 ```
 
-### Frontend không gọi được API
-- Kiểm tra `NEXT_PUBLIC_BACKEND_URL` trong `.env.local`
-- Kiểm tra CORS settings trong backend
-- Xem Network tab trong Browser DevTools
+### Frontend Cannot Call API
+- Check `NEXT_PUBLIC_BACKEND_URL` in `.env.local`
+- Check CORS settings in backend
+- Check Network tab in Browser DevTools
 
 ## 📝 License
 
