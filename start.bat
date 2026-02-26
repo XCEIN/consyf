@@ -33,8 +33,8 @@ REM Wait 2 seconds for backend to start
 timeout /t 2 /nobreak >nul
 
 REM --- Start Frontend in new window ---
-echo [START] Frontend on http://localhost:3000
-start "CONSYF Frontend" cmd /k "cd /d %ROOT_DIR%front-end && npx next start -p 3000"
+echo [START] Frontend on http://localhost:80
+start "CONSYF Frontend" cmd /k "cd /d %ROOT_DIR%front-end && npx next start -p 80"
 
 echo.
 echo ========================================
@@ -42,7 +42,7 @@ echo   SERVICES STARTED!
 echo ========================================
 echo.
 echo   Backend:  http://localhost:4000
-echo   Frontend: http://localhost:3000
+echo   Frontend: http://localhost:80 (domain: sitetest2026.io.vn)
 echo.
 echo   Two new CMD windows opened.
 echo   Close them to stop the services.
