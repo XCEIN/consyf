@@ -7,9 +7,10 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
   
   try {
-    const response = await fetch(`http://localhost:4000/api/news/${slug}`, {
+    const response = await fetch(`${backendUrl}/api/news/${slug}`, {
       cache: "no-store",
     });
     
