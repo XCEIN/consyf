@@ -3,7 +3,8 @@ module.exports = {
     {
       name: 'consyf-backend',
       cwd: './backend',
-      script: 'dist/server.js',
+      script: 'node',
+      args: '--import tsx src/server.ts',
       env: {
         NODE_ENV: 'production',
         PORT: 4000,
