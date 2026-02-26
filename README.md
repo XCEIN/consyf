@@ -27,7 +27,7 @@ CONSYF is a platform that connects investors, businesses, and potential partners
 
 ```
 consyf-full/
-├── consyf-project/          # Frontend Next.js
+├── front-end/               # Frontend Next.js
 │   ├── app/                 # App router
 │   │   ├── (user)/         # User pages
 │   │   ├── admin/          # Admin dashboard
@@ -113,7 +113,7 @@ Backend will run at: `http://localhost:4000`
 ### 3. Frontend Setup
 
 ```bash
-cd ../consyf-project
+cd ../front-end
 npm install
 ```
 

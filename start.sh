@@ -4,7 +4,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-FRONT_DIR="$ROOT_DIR/consyf-project"
+FRONT_DIR="$ROOT_DIR/front-end"
 BACK_DIR="$ROOT_DIR/backend"
 
 # Default envs (override via .env files)

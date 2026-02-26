@@ -42,7 +42,7 @@ Posting will trigger the backend to create an embedding via Gemini and store it 
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/ron19102004/consyf-project.git
+git clone https://github.com/XCEIN/consyf-full.git
 cd consyf-nextjs
 ```
 

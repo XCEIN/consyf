@@ -140,7 +140,7 @@ router.post('/verify-email', async (req, res) => {
     const jwtSecret: Secret = process.env.JWT_SECRET || 'default_secret';
     const jwtOptions: SignOptions = { expiresIn: (process.env.JWT_EXPIRES_IN || '7d') as any };
     const token = jwt.sign(
-      { userId, email },
+      { userId, email, accountType: user.account_type || 'user' },
       jwtSecret,
       jwtOptions
     );
@@ -238,7 +238,7 @@ router.post('/login', async (req, res) => {
     const jwtSecret: Secret = process.env.JWT_SECRET || 'default_secret';
     const jwtOptions: SignOptions = { expiresIn: (process.env.JWT_EXPIRES_IN || '7d') as any };
     const token = jwt.sign(
-      { userId: user.id, email: user.email },
+      { userId: user.id, email: user.email, accountType: user.account_type || 'user' },
       jwtSecret,
       jwtOptions
     );

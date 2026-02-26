@@ -60,9 +60,9 @@ const upload = multer({
 const PostSchema = z.object({
   company_id: z.number().int(),
   type: z.enum(['buy', 'sell']),
-  title: z.string().min(3),
-  description: z.string().min(10),
-  category: z.string(),
+  title: z.string().min(3, 'Tiêu đề phải có ít nhất 3 ký tự'),
+  description: z.string().min(10, 'Mô tả phải có ít nhất 10 ký tự'),
+  category: z.string().min(1, 'Vui lòng chọn danh mục'),
   budget: z.number().optional(),
   location: z.string().optional(),
   tags: z.array(z.string()).optional(),
@@ -203,9 +203,37 @@ router.post('/upload-images', authenticateToken, upload.fields([
 });
 
 router.get('/:id', async (req, res) => {
-  const [rows] = await pool.query('SELECT * FROM posts WHERE id=?', [req.params.id]);
-  // @ts-ignore
-  res.json(rows?.[0] || null);
+  try {
+    const [rows] = await pool.query(
+      `SELECT p.*, 
+              c.name as company_name, 
+              c.logo as company_logo,
+              u.name as user_name,
+              u.avatar as user_avatar,
+              u.email as user_email,
+              u.phone as user_phone,
+              u.account_type
+       FROM posts p 
+       JOIN companies c ON p.company_id = c.id 
+       JOIN users u ON c.user_id = u.id
+       WHERE p.id = ?`,
+      [req.params.id]
+    );
+    // @ts-ignore
+    const post = rows?.[0];
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+    
+    // Convert image paths to full URLs
+    post.post_image = getFullImageUrl(post.post_image);
+    post.user_avatar = getFullImageUrl(post.user_avatar);
+    
+    res.json({ post });
+  } catch (error) {
+    console.error('Get post by id error:', error);
+    res.status(500).json({ message: 'Failed to fetch post' });
+  }
 });
 
 // Get user's own posts
@@ -418,10 +446,14 @@ router.get('/admin/all', authenticateToken, async (req: AuthRequest, res) => {
     }
     
     // Count total
-    const countQuery = query.replace(/SELECT.*?FROM/, 'SELECT COUNT(*) as total FROM');
-    const [countResult] = await pool.query(countQuery, params);
+    let countQuery = `SELECT COUNT(*) as total FROM posts p`;
+    if (status && status !== 'all') {
+      countQuery += ' WHERE p.status = ?';
+    }
+    const countParams = status && status !== 'all' ? [status] : [];
+    const [countResult] = await pool.query(countQuery, countParams);
     // @ts-ignore
-    const total = countResult[0].total;
+    const total = countResult[0]?.total || 0;
     
     // Add sorting and pagination
     query += ' ORDER BY p.created_at DESC LIMIT ? OFFSET ?';

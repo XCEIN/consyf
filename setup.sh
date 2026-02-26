@@ -44,9 +44,9 @@ else
 fi
 
 # Check frontend .env.local
-if [ ! -f "$(dirname "$0")/consyf-project/.env.local" ]; then
+if [ ! -f "$(dirname "$0")/front-end/.env.local" ]; then
     echo "⚙️  Creating frontend .env.local..."
-    echo "NEXT_PUBLIC_BACKEND_URL=http://localhost:4000" > "$(dirname "$0")/consyf-project/.env.local"
+    echo "NEXT_PUBLIC_BACKEND_URL=http://localhost:4000" > "$(dirname "$0")/front-end/.env.local"
     echo "✅ Frontend .env.local created"
 else
     echo "✅ Frontend .env.local exists"
@@ -58,9 +58,9 @@ if [ ! -d "$(dirname "$0")/backend/node_modules" ]; then
     echo "   Installing backend dependencies..."
     (cd "$(dirname "$0")/backend" && npm install --silent)
 fi
-if [ ! -d "$(dirname "$0")/consyf-project/node_modules" ]; then
+if [ ! -d "$(dirname "$0")/front-end/node_modules" ]; then
     echo "   Installing frontend dependencies..."
-    (cd "$(dirname "$0")/consyf-project" && npm install --silent)
+    (cd "$(dirname "$0")/front-end" && npm install --silent)
 fi
 echo "✅ All dependencies installed"
 
