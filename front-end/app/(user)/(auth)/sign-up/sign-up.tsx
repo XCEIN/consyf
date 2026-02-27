@@ -62,9 +62,15 @@ export default function SignUpPageClient() {
         return;
       }
       
-      // Store email for verification page
-      sessionStorage.setItem('verifyEmail', data.email);
-      router.push("/sign-up/verify");
+      if (result.autoVerified) {
+        // Email service unavailable - account auto-verified
+        alert('Đăng ký thành công! Tài khoản đã được xác thực. Vui lòng đăng nhập.');
+        router.push("/sign-in");
+      } else {
+        // Store email for verification page
+        sessionStorage.setItem('verifyEmail', data.email);
+        router.push("/sign-up/verify");
+      }
     } catch (err) {
       console.error("Register error:", err);
       setError('Đã xảy ra lỗi khi đăng ký');

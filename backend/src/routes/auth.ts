@@ -80,18 +80,25 @@ router.post('/register', async (req, res) => {
     );
 
     // Send verification email
+    let emailSent = false;
     try {
       await sendVerificationEmail(email, otp, name);
+      emailSent = true;
     } catch (emailError) {
       console.error('Email sending failed:', emailError);
-      // Continue anyway - user can request resend
+      // Auto-verify user if email cannot be sent
+      await pool.query('UPDATE email_verifications SET verified = TRUE WHERE user_id = ?', [userId]);
+      await pool.query('UPDATE users SET email_verified = TRUE WHERE id = ?', [userId]);
+      console.log(`Auto-verified user ${email} (email service unavailable)`);
     }
 
     res.status(201).json({ 
-      message: 'Đăng ký thành công. Vui lòng kiểm tra email để xác thực.',
+      message: emailSent 
+        ? 'Đăng ký thành công. Vui lòng kiểm tra email để xác thực.'
+        : 'Đăng ký thành công. Tài khoản đã được xác thực tự động.',
       userId,
       email,
-      otp: process.env.NODE_ENV === 'development' ? otp : undefined, // Show OTP in dev mode for testing
+      autoVerified: !emailSent,
     });
   } catch (error) {
     console.error('Register error:', error);
