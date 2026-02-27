@@ -5,6 +5,18 @@ const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000
 const url = new URL(backendUrl);
 
 const nextConfig: NextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${backendUrl}/api/:path*`,
+      },
+      {
+        source: '/uploads/:path*',
+        destination: `${backendUrl}/uploads/:path*`,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {
