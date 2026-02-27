@@ -4,6 +4,7 @@ const config: any = {
   user: process.env.MYSQL_USER || 'root',
   password: process.env.MYSQL_PASSWORD || '',
   database: process.env.MYSQL_DATABASE || 'consyfnew',
+  charset: 'utf8mb4',
   waitForConnections: true,
   connectionLimit: 10,
 };

@@ -4,6 +4,11 @@
 -- ⚠️ CẢNH BÁO: Sẽ XÓA TOÀN BỘ DỮ LIỆU
 -- ============================================
 
+-- Đảm bảo UTF-8 cho tiếng Việt
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+SET collation_connection = 'utf8mb4_unicode_ci';
+
 -- Tắt kiểm tra foreign key để drop không bị lỗi
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -44,7 +49,7 @@ CREATE TABLE users (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_email (email)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
 -- 2. EMAIL VERIFICATIONS
@@ -58,7 +63,7 @@ CREATE TABLE email_verifications (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   INDEX idx_user_otp (user_id, otp)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
 -- 3. PASSWORD RESETS
@@ -72,7 +77,7 @@ CREATE TABLE password_resets (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   INDEX idx_token (token)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
 -- 4. COMPANIES
@@ -86,7 +91,7 @@ CREATE TABLE companies (
   tags TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
 -- 5. POSTS (dự án đầu tư / huy động)
@@ -107,7 +112,7 @@ CREATE TABLE posts (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE,
   INDEX idx_status (status)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
 -- 6. EMBEDDINGS (vector search)
@@ -119,7 +124,7 @@ CREATE TABLE embeddings (
   vector_json JSON NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
 -- 7. MATCHES
@@ -133,7 +138,7 @@ CREATE TABLE matches (
   UNIQUE KEY uniq_match (buy_post_id, sell_post_id),
   FOREIGN KEY (buy_post_id) REFERENCES posts(id) ON DELETE CASCADE,
   FOREIGN KEY (sell_post_id) REFERENCES posts(id) ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
 -- 8. NEWS CATEGORIES
@@ -145,7 +150,7 @@ CREATE TABLE news_categories (
   description TEXT,
   sort_order INT DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
 -- 9. NEWS (tin tức / blog)
@@ -178,7 +183,7 @@ CREATE TABLE news (
   INDEX idx_slug (slug),
   INDEX idx_published (published),
   INDEX idx_featured (featured)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
 -- 10. PROMOTIONS
@@ -200,7 +205,7 @@ CREATE TABLE promotions (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_slug (slug),
   INDEX idx_active (is_active)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
 -- 11. PROMOTION CATEGORIES
@@ -211,7 +216,7 @@ CREATE TABLE promotion_categories (
   slug VARCHAR(255) NOT NULL UNIQUE,
   description TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
 -- 12. JOBS (tuyển dụng)
@@ -236,7 +241,7 @@ CREATE TABLE jobs (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_slug (slug),
   INDEX idx_active (is_active)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
 -- 13. JOB APPLICATIONS
@@ -255,7 +260,7 @@ CREATE TABLE job_applications (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (job_id) REFERENCES jobs(id) ON DELETE CASCADE,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
 -- 14. SUPPORT TICKETS
@@ -273,7 +278,7 @@ CREATE TABLE support_tickets (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
 -- 15. FAQ
@@ -287,7 +292,7 @@ CREATE TABLE faq (
   is_active BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
 -- 16. NOTIFICATIONS
@@ -306,7 +311,7 @@ CREATE TABLE notifications (
   INDEX idx_user_id (user_id),
   INDEX idx_created_at (created_at),
   INDEX idx_is_read (is_read)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
 -- TẠO TÀI KHOẢN ADMIN MẶC ĐỊNH
