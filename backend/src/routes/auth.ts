@@ -86,19 +86,17 @@ router.post('/register', async (req, res) => {
       emailSent = true;
     } catch (emailError) {
       console.error('Email sending failed:', emailError);
-      // Auto-verify user if email cannot be sent
-      await pool.query('UPDATE email_verifications SET verified = TRUE WHERE user_id = ?', [userId]);
-      await pool.query('UPDATE users SET email_verified = TRUE WHERE id = ?', [userId]);
-      console.log(`Auto-verified user ${email} (email service unavailable)`);
+      // Email failed but don't auto-verify - return OTP so frontend can show it
     }
 
     res.status(201).json({ 
       message: emailSent 
         ? 'Đăng ký thành công. Vui lòng kiểm tra email để xác thực.'
-        : 'Đăng ký thành công. Tài khoản đã được xác thực tự động.',
+        : 'Đăng ký thành công. Email gửi thất bại, vui lòng dùng mã OTP bên dưới để xác thực.',
       userId,
       email,
-      autoVerified: !emailSent,
+      emailSent,
+      otp: !emailSent ? otp : undefined, // Return OTP when email fails so user can still verify
     });
   } catch (error) {
     console.error('Register error:', error);
