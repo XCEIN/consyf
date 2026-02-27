@@ -1,14 +1,29 @@
 import * as nodemailer from 'nodemailer';
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || 'smtp.gmail.com',
-  port: Number(process.env.SMTP_PORT || 587),
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
+// Lazy-create transporter to ensure env vars are loaded
+let transporter: nodemailer.Transporter | null = null;
+
+function getTransporter() {
+  if (!transporter) {
+    console.log('[Email] Creating SMTP transporter:', {
+      host: process.env.SMTP_HOST || 'smtp.gmail.com',
+      port: Number(process.env.SMTP_PORT || 587),
+      user: process.env.SMTP_USER ? `${process.env.SMTP_USER.substring(0, 5)}...` : 'NOT SET',
+      passSet: !!process.env.SMTP_PASS,
+    });
+
+    transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST || 'smtp.gmail.com',
+      port: Number(process.env.SMTP_PORT || 587),
+      secure: false,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+  }
+  return transporter;
+}
 
 export async function sendVerificationEmail(to: string, otp: string, userName: string) {
   const mailOptions = {
@@ -32,7 +47,7 @@ export async function sendVerificationEmail(to: string, otp: string, userName: s
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    await getTransporter().sendMail(mailOptions);
     console.log(`Verification email sent to ${to}`);
   } catch (error) {
     console.error('Error sending email:', error);
@@ -67,7 +82,7 @@ export async function sendPasswordResetEmail(to: string, resetToken: string, use
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    await getTransporter().sendMail(mailOptions);
     console.log(`Password reset email sent to ${to}`);
   } catch (error) {
     console.error('Error sending email:', error);

@@ -63,4 +63,7 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 const port = Number(process.env.PORT || 4000);
 app.listen(port, () => {
   console.log(`[consyf-backend] listening on port ${port}`);
+  // Log email config status
+  console.log(`[Email] SMTP_USER: ${process.env.SMTP_USER ? process.env.SMTP_USER.substring(0, 5) + '...' : '❌ NOT SET'}`);
+  console.log(`[Email] SMTP_PASS: ${process.env.SMTP_PASS ? '✅ Set' : '❌ NOT SET'}`);
 });

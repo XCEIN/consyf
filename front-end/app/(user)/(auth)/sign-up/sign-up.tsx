@@ -64,9 +64,8 @@ export default function SignUpPageClient() {
       
       // Store email for verification page
       sessionStorage.setItem('verifyEmail', data.email);
-      // If email sending failed, store OTP so verify page can display it
-      if (!result.emailSent && result.otp) {
-        sessionStorage.setItem('fallbackOtp', result.otp);
+      if (!result.emailSent) {
+        sessionStorage.setItem('emailFailed', 'true');
       }
       router.push("/sign-up/verify");
     } catch (err) {

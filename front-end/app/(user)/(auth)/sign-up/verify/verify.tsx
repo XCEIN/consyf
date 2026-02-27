@@ -17,7 +17,7 @@ export default function VerifyPageClient() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [fallbackOtp, setFallbackOtp] = useState<string | null>(null);
+  const [emailFailed, setEmailFailed] = useState(false);
 
   // Get email from session storage
   useEffect(() => {
@@ -27,11 +27,11 @@ export default function VerifyPageClient() {
     } else {
       router.push('/sign-up');
     }
-    // Check if OTP was returned due to email failure
-    const storedOtp = sessionStorage.getItem('fallbackOtp');
-    if (storedOtp) {
-      setFallbackOtp(storedOtp);
-      sessionStorage.removeItem('fallbackOtp');
+    // Check if email sending failed
+    const failed = sessionStorage.getItem('emailFailed');
+    if (failed) {
+      setEmailFailed(true);
+      sessionStorage.removeItem('emailFailed');
     }
   }, [router]);
 
@@ -149,11 +149,10 @@ export default function VerifyPageClient() {
               {email || 'Đang tải...'}
             </span>
           </p>
-          {fallbackOtp && (
+          {emailFailed && (
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mt-2">
               <p className="text-sm text-yellow-800 text-center">
-                ⚠️ Email gửi thất bại. Mã OTP của bạn là: <br />
-                <span className="text-2xl font-bold tracking-widest text-yellow-900">{fallbackOtp}</span>
+                ⚠️ Gửi email thất bại. Vui lòng nhấn &quot;Gửi lại&quot; bên dưới để thử lại.
               </p>
             </div>
           )}

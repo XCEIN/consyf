@@ -92,11 +92,10 @@ router.post('/register', async (req, res) => {
     res.status(201).json({ 
       message: emailSent 
         ? 'Đăng ký thành công. Vui lòng kiểm tra email để xác thực.'
-        : 'Đăng ký thành công. Email gửi thất bại, vui lòng dùng mã OTP bên dưới để xác thực.',
+        : 'Đăng ký thành công nhưng gửi email thất bại. Vui lòng thử gửi lại mã.',
       userId,
       email,
       emailSent,
-      otp: !emailSent ? otp : undefined, // Return OTP when email fails so user can still verify
     });
   } catch (error) {
     console.error('Register error:', error);
