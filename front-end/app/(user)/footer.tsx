@@ -13,7 +13,7 @@ interface SocialItem {
 const navItems: NavItem[] = [
   { label: "Giới thiệu", href: "/about-us" },
   { label: "Tính năng", href: "/futures" },
-  { label: "Gói dịch vụ", href: "/services" },
+  { label: "Gói dịch vụ", href: "/price-list" },
   { label: "Tuyển dụng", href: "/recruitment" },
   { label: "Hỗ trợ", href: "/support" },
   { label: "Chính sách bảo mật", href: "/privacy" },

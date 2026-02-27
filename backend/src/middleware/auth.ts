@@ -52,6 +52,19 @@ export const requireAdmin = (
   next();
 };
 
+// Middleware to check if user is admin or editor
+export const requireAdminOrEditor = (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+): void => {
+  if (!req.user || (req.user.accountType !== 'admin' && req.user.accountType !== 'editor')) {
+    res.status(403).json({ message: 'Yêu cầu quyền quản trị hoặc editor' });
+    return;
+  }
+  next();
+};
+
 export const requireEditor = (
   req: AuthRequest,
   res: Response,

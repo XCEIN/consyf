@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { pool } from '../db.js';
-import { authenticateToken, requireAdmin, type AuthRequest } from '../middleware/auth.js';
+import { authenticateToken, requireAdminOrEditor, type AuthRequest } from '../middleware/auth.js';
 import { z } from 'zod';
 import multer from 'multer';
 import path from 'path';
@@ -61,7 +61,7 @@ const getImageUrl = (relativePath: string | null): string | null => {
 };
 
 // Upload image for news content
-router.post('/upload-image', authenticateToken, requireAdmin, upload.single('image'), async (req: AuthRequest, res) => {
+router.post('/upload-image', authenticateToken, requireAdminOrEditor, upload.single('image'), async (req: AuthRequest, res) => {
   try {
     if (!req.file) {
       res.status(400).json({ message: 'Vui lòng chọn file ảnh' });
@@ -82,7 +82,7 @@ router.post('/upload-image', authenticateToken, requireAdmin, upload.single('ima
 });
 
 // Get all images in media library
-router.get('/media-library', authenticateToken, requireAdmin, async (req: AuthRequest, res) => {
+router.get('/media-library', authenticateToken, requireAdminOrEditor, async (req: AuthRequest, res) => {
   try {
     const files = fs.readdirSync(newsImagesDir)
       .filter(f => /\.(jpg|jpeg|png|gif|webp)$/i.test(f))
@@ -107,7 +107,7 @@ router.get('/media-library', authenticateToken, requireAdmin, async (req: AuthRe
 });
 
 // Delete image from media library
-router.delete('/media-library/:filename', authenticateToken, requireAdmin, async (req: AuthRequest, res) => {
+router.delete('/media-library/:filename', authenticateToken, requireAdminOrEditor, async (req: AuthRequest, res) => {
   try {
     const { filename } = req.params;
     const filePath = path.join(newsImagesDir, filename);
@@ -124,7 +124,7 @@ router.delete('/media-library/:filename', authenticateToken, requireAdmin, async
 });
 
 // Get all news for admin (includes unpublished)
-router.get('/admin/all', authenticateToken, requireAdmin, async (req: AuthRequest, res) => {
+router.get('/admin/all', authenticateToken, requireAdminOrEditor, async (req: AuthRequest, res) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 20;
@@ -203,7 +203,7 @@ router.get('/admin/all', authenticateToken, requireAdmin, async (req: AuthReques
 });
 
 // Get news by ID for admin (includes unpublished)
-router.get('/admin/:id', authenticateToken, requireAdmin, async (req: AuthRequest, res) => {
+router.get('/admin/:id', authenticateToken, requireAdminOrEditor, async (req: AuthRequest, res) => {
   try {
     const { id } = req.params;
     
@@ -357,7 +357,7 @@ router.get('/:slug', async (req, res) => {
 });
 
 // Create news (admin only)
-router.post('/', authenticateToken, requireAdmin, async (req: AuthRequest, res) => {
+router.post('/', authenticateToken, requireAdminOrEditor, async (req: AuthRequest, res) => {
   try {
     const newsSchema = z.object({
       title: z.string().min(1, 'Tiêu đề không được để trống'),
@@ -422,7 +422,7 @@ router.post('/', authenticateToken, requireAdmin, async (req: AuthRequest, res) 
 });
 
 // Update news (admin only)
-router.put('/:id', authenticateToken, requireAdmin, async (req: AuthRequest, res) => {
+router.put('/:id', authenticateToken, requireAdminOrEditor, async (req: AuthRequest, res) => {
   try {
     const newsId = req.params.id;
     
@@ -541,7 +541,7 @@ router.put('/:id', authenticateToken, requireAdmin, async (req: AuthRequest, res
 });
 
 // Delete news (admin only)
-router.delete('/:id', authenticateToken, requireAdmin, async (req: AuthRequest, res) => {
+router.delete('/:id', authenticateToken, requireAdminOrEditor, async (req: AuthRequest, res) => {
   try {
     const newsId = req.params.id;
     

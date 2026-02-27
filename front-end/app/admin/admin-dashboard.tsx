@@ -28,7 +28,7 @@ export default function AdminDashboardClient() {
     }
     
     const parsedUser = JSON.parse(userData);
-    if (parsedUser.role !== 'admin') {
+    if (parsedUser.account_type !== 'admin' && parsedUser.account_type !== 'editor') {
       alert('Bạn không có quyền truy cập trang này');
       router.push('/');
       return;
@@ -50,7 +50,7 @@ export default function AdminDashboardClient() {
             <div className="w-[60px] h-[60px] relative rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
               {user.avatar ? (
                 <img
-                  src={user.avatar.startsWith('http') ? user.avatar : `${API_URL}{user.avatar}`}
+                  src={user.avatar.startsWith('http') ? user.avatar : `${API_URL}${user.avatar}`}
                   alt={user.name}
                   className="w-full h-full object-cover"
                 />
