@@ -143,8 +143,10 @@ router.post('/verify-email', async (req, res) => {
     // Generate JWT token
     const jwtSecret: Secret = process.env.JWT_SECRET || 'default_secret';
     const jwtOptions: SignOptions = { expiresIn: (process.env.JWT_EXPIRES_IN || '7d') as any };
+    // Resolve accountType: prioritize role if it's admin/editor, otherwise use account_type
+    const resolvedAccountType = (user.role === 'admin' || user.role === 'editor') ? user.role : (user.account_type || 'user');
     const token = jwt.sign(
-      { userId, email, accountType: user.account_type || 'user' },
+      { userId, email, accountType: resolvedAccountType },
       jwtSecret,
       jwtOptions
     );
@@ -241,8 +243,10 @@ router.post('/login', async (req, res) => {
     // Generate JWT token
     const jwtSecret: Secret = process.env.JWT_SECRET || 'default_secret';
     const jwtOptions: SignOptions = { expiresIn: (process.env.JWT_EXPIRES_IN || '7d') as any };
+    // Resolve accountType: prioritize role if it's admin/editor, otherwise use account_type
+    const resolvedAccountType = (user.role === 'admin' || user.role === 'editor') ? user.role : (user.account_type || 'user');
     const token = jwt.sign(
-      { userId: user.id, email: user.email, accountType: user.account_type || 'user' },
+      { userId: user.id, email: user.email, accountType: resolvedAccountType },
       jwtSecret,
       jwtOptions
     );

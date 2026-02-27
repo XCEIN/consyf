@@ -28,7 +28,8 @@ export default function AdminDashboardClient() {
     }
     
     const parsedUser = JSON.parse(userData);
-    if (parsedUser.account_type !== 'admin' && parsedUser.account_type !== 'editor') {
+    const isAdmin = parsedUser.account_type === 'admin' || parsedUser.account_type === 'editor' || parsedUser.role === 'admin';
+    if (!isAdmin) {
       alert('Bạn không có quyền truy cập trang này');
       router.push('/');
       return;

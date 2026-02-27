@@ -24,7 +24,8 @@ export default function AdminLayout({
     }
     
     const userData = JSON.parse(user);
-    if (userData.account_type !== 'admin' && userData.account_type !== 'editor') {
+    const isAdmin = userData.account_type === 'admin' || userData.account_type === 'editor' || userData.role === 'admin';
+    if (!isAdmin) {
       alert('Bạn không có quyền truy cập trang này');
       router.push('/');
       return;
