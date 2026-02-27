@@ -265,7 +265,7 @@ export default function NewsEditor({ mode, newsId }: NewsEditorProps) {
       const fd = new FormData();
       fd.append("image", file);
       const res = await axios.post(`${API_URL}/api/news/upload-image`, fd, {
-        headers: { Authorization: `Bearer ${getToken()}`, "Content-Type": "multipart/form-data" },
+        headers: { Authorization: `Bearer ${getToken()}` },
       });
       exec("insertHTML", `<img src="${res.data.url}" alt="${file.name}" style="max-width:100%;height:auto;border-radius:0.5em;margin:1em 0;" />`);
     } catch (err) {
@@ -285,7 +285,7 @@ export default function NewsEditor({ mode, newsId }: NewsEditorProps) {
       const fd = new FormData();
       fd.append("image", file);
       const res = await axios.post(`${API_URL}/api/news/upload-image`, fd, {
-        headers: { Authorization: `Bearer ${getToken()}`, "Content-Type": "multipart/form-data" },
+        headers: { Authorization: `Bearer ${getToken()}` },
       });
       setNewsData((prev) => ({ ...prev, thumbnail: res.data.url }));
     } catch (err) {
@@ -324,7 +324,7 @@ export default function NewsEditor({ mode, newsId }: NewsEditorProps) {
         const fd = new FormData();
         fd.append("image", file);
         await axios.post(`${API_URL}/api/news/upload-image`, fd, {
-          headers: { Authorization: `Bearer ${getToken()}`, "Content-Type": "multipart/form-data" },
+          headers: { Authorization: `Bearer ${getToken()}` },
         });
       }
       fetchMediaLibrary();
@@ -610,7 +610,7 @@ export default function NewsEditor({ mode, newsId }: NewsEditorProps) {
                     fd.append("image", files[0]);
                     try {
                       const res = await axios.post(`${API_URL}/api/news/upload-image`, fd, {
-                        headers: { Authorization: `Bearer ${getToken()}`, "Content-Type": "multipart/form-data" },
+                        headers: { Authorization: `Bearer ${getToken()}` },
                       });
                       exec("insertHTML", `<img src="${res.data.url}" alt="${files[0].name}" style="max-width:100%;height:auto;border-radius:0.5em;margin:1em 0;" />`);
                     } catch {

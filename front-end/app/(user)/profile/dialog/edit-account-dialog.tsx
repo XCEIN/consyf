@@ -120,8 +120,8 @@ export default function EditAccountDialog({
         account_type: accountType,
       };
       
-      // Only include avatar if it's a valid URL
-      if (avatarUrl && (avatarUrl.startsWith('http://') || avatarUrl.startsWith('https://'))) {
+      // Only include avatar if it's a valid URL or relative path
+      if (avatarUrl && (avatarUrl.startsWith('/') || avatarUrl.startsWith('http://') || avatarUrl.startsWith('https://'))) {
         updateData.avatar = avatarUrl;
       }
       

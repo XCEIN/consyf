@@ -95,8 +95,8 @@ router.post('/avatar', authenticateToken, upload.single('avatar'), async (req: A
       return;
     }
     
-    // Generate avatar URL
-    const avatarUrl = `${req.protocol}://${req.get('host')}/uploads/avatars/${req.file.filename}`;
+    // Generate avatar URL - use relative path for proxy compatibility
+    const avatarUrl = `/uploads/avatars/${req.file.filename}`;
     
     // Update user avatar in database
     await pool.query(
@@ -119,7 +119,7 @@ router.put('/', authenticateToken, async (req: AuthRequest, res) => {
     const updateSchema = z.object({
       name: z.string().min(2).optional(),
       phone: z.string().min(10).optional(),
-      avatar: z.string().url().optional(),
+      avatar: z.string().optional(),
       account_type: z.enum(['personal', 'organization']).optional(),
     });
     
