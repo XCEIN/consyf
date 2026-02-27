@@ -1,10 +1,36 @@
 -- ============================================
--- MySQL schema for consyfnew
--- Đồng bộ với 000_reset_database.sql
--- Dùng làm reference, không cần chạy nếu đã chạy reset
+-- RESET & RECREATE DATABASE - consyfnew
+-- Chạy file này để xóa sạch và tạo lại toàn bộ DB
+-- ⚠️ CẢNH BÁO: Sẽ XÓA TOÀN BỘ DỮ LIỆU
 -- ============================================
 
-CREATE TABLE IF NOT EXISTS users (
+-- Tắt kiểm tra foreign key để drop không bị lỗi
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- Xóa toàn bộ bảng cũ
+DROP TABLE IF EXISTS notifications;
+DROP TABLE IF EXISTS matches;
+DROP TABLE IF EXISTS embeddings;
+DROP TABLE IF EXISTS job_applications;
+DROP TABLE IF EXISTS support_tickets;
+DROP TABLE IF EXISTS faq;
+DROP TABLE IF EXISTS jobs;
+DROP TABLE IF EXISTS promotions;
+DROP TABLE IF EXISTS promotion_categories;
+DROP TABLE IF EXISTS news_categories;
+DROP TABLE IF EXISTS news;
+DROP TABLE IF EXISTS posts;
+DROP TABLE IF EXISTS companies;
+DROP TABLE IF EXISTS email_verifications;
+DROP TABLE IF EXISTS password_resets;
+DROP TABLE IF EXISTS users;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- ============================================
+-- 1. USERS
+-- ============================================
+CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
@@ -20,7 +46,10 @@ CREATE TABLE IF NOT EXISTS users (
   INDEX idx_email (email)
 );
 
-CREATE TABLE IF NOT EXISTS email_verifications (
+-- ============================================
+-- 2. EMAIL VERIFICATIONS
+-- ============================================
+CREATE TABLE email_verifications (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   otp VARCHAR(10) NOT NULL,
@@ -31,7 +60,10 @@ CREATE TABLE IF NOT EXISTS email_verifications (
   INDEX idx_user_otp (user_id, otp)
 );
 
-CREATE TABLE IF NOT EXISTS password_resets (
+-- ============================================
+-- 3. PASSWORD RESETS
+-- ============================================
+CREATE TABLE password_resets (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   token VARCHAR(255) NOT NULL,
@@ -42,7 +74,10 @@ CREATE TABLE IF NOT EXISTS password_resets (
   INDEX idx_token (token)
 );
 
-CREATE TABLE IF NOT EXISTS companies (
+-- ============================================
+-- 4. COMPANIES
+-- ============================================
+CREATE TABLE companies (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT,
   name VARCHAR(255) NOT NULL,
@@ -53,7 +88,10 @@ CREATE TABLE IF NOT EXISTS companies (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
-CREATE TABLE IF NOT EXISTS posts (
+-- ============================================
+-- 5. POSTS (dự án đầu tư / huy động)
+-- ============================================
+CREATE TABLE posts (
   id INT AUTO_INCREMENT PRIMARY KEY,
   company_id INT NOT NULL,
   type ENUM('buy','sell') NOT NULL,
@@ -71,7 +109,10 @@ CREATE TABLE IF NOT EXISTS posts (
   INDEX idx_status (status)
 );
 
-CREATE TABLE IF NOT EXISTS embeddings (
+-- ============================================
+-- 6. EMBEDDINGS (vector search)
+-- ============================================
+CREATE TABLE embeddings (
   id INT AUTO_INCREMENT PRIMARY KEY,
   post_id INT NOT NULL,
   vector_dim INT NOT NULL,
@@ -80,7 +121,10 @@ CREATE TABLE IF NOT EXISTS embeddings (
   FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS matches (
+-- ============================================
+-- 7. MATCHES
+-- ============================================
+CREATE TABLE matches (
   id INT AUTO_INCREMENT PRIMARY KEY,
   buy_post_id INT NOT NULL,
   sell_post_id INT NOT NULL,
@@ -91,7 +135,10 @@ CREATE TABLE IF NOT EXISTS matches (
   FOREIGN KEY (sell_post_id) REFERENCES posts(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS news_categories (
+-- ============================================
+-- 8. NEWS CATEGORIES
+-- ============================================
+CREATE TABLE news_categories (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   slug VARCHAR(255) NOT NULL UNIQUE,
@@ -100,7 +147,10 @@ CREATE TABLE IF NOT EXISTS news_categories (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS news (
+-- ============================================
+-- 9. NEWS (tin tức / blog)
+-- ============================================
+CREATE TABLE news (
   id INT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
   slug VARCHAR(255) NOT NULL UNIQUE,
@@ -113,11 +163,13 @@ CREATE TABLE IF NOT EXISTS news (
   views INT DEFAULT 0,
   published BOOLEAN DEFAULT FALSE,
   published_at TIMESTAMP NULL,
+  -- SEO fields
   meta_title VARCHAR(255),
   meta_description TEXT,
   meta_keywords VARCHAR(500),
   canonical_url VARCHAR(512),
   og_image VARCHAR(512),
+  -- Content settings
   allow_comments BOOLEAN DEFAULT TRUE,
   featured BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -128,7 +180,10 @@ CREATE TABLE IF NOT EXISTS news (
   INDEX idx_featured (featured)
 );
 
-CREATE TABLE IF NOT EXISTS promotions (
+-- ============================================
+-- 10. PROMOTIONS
+-- ============================================
+CREATE TABLE promotions (
   id INT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
   slug VARCHAR(255) NOT NULL UNIQUE,
@@ -147,7 +202,10 @@ CREATE TABLE IF NOT EXISTS promotions (
   INDEX idx_active (is_active)
 );
 
-CREATE TABLE IF NOT EXISTS promotion_categories (
+-- ============================================
+-- 11. PROMOTION CATEGORIES
+-- ============================================
+CREATE TABLE promotion_categories (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   slug VARCHAR(255) NOT NULL UNIQUE,
@@ -155,7 +213,10 @@ CREATE TABLE IF NOT EXISTS promotion_categories (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS jobs (
+-- ============================================
+-- 12. JOBS (tuyển dụng)
+-- ============================================
+CREATE TABLE jobs (
   id INT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
   slug VARCHAR(255) NOT NULL UNIQUE,
@@ -177,7 +238,10 @@ CREATE TABLE IF NOT EXISTS jobs (
   INDEX idx_active (is_active)
 );
 
-CREATE TABLE IF NOT EXISTS job_applications (
+-- ============================================
+-- 13. JOB APPLICATIONS
+-- ============================================
+CREATE TABLE job_applications (
   id INT AUTO_INCREMENT PRIMARY KEY,
   job_id INT NOT NULL,
   user_id INT,
@@ -193,7 +257,10 @@ CREATE TABLE IF NOT EXISTS job_applications (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
-CREATE TABLE IF NOT EXISTS support_tickets (
+-- ============================================
+-- 14. SUPPORT TICKETS
+-- ============================================
+CREATE TABLE support_tickets (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT,
   name VARCHAR(255) NOT NULL,
@@ -208,7 +275,10 @@ CREATE TABLE IF NOT EXISTS support_tickets (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
-CREATE TABLE IF NOT EXISTS faq (
+-- ============================================
+-- 15. FAQ
+-- ============================================
+CREATE TABLE faq (
   id INT AUTO_INCREMENT PRIMARY KEY,
   question TEXT NOT NULL,
   answer TEXT NOT NULL,
@@ -219,7 +289,10 @@ CREATE TABLE IF NOT EXISTS faq (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS notifications (
+-- ============================================
+-- 16. NOTIFICATIONS
+-- ============================================
+CREATE TABLE notifications (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   post_id INT,
@@ -234,3 +307,31 @@ CREATE TABLE IF NOT EXISTS notifications (
   INDEX idx_created_at (created_at),
   INDEX idx_is_read (is_read)
 );
+
+-- ============================================
+-- TẠO TÀI KHOẢN ADMIN MẶC ĐỊNH
+-- Password: Admin@123 (bcrypt hash)
+-- ============================================
+INSERT INTO users (name, email, phone, password_hash, email_verified, is_active, role, account_type)
+VALUES (
+  'Admin',
+  'admin@consyf.com',
+  '0000000000',
+  '$2b$10$8K1p/a0dL1LXMIgoEDFrwOfMQkGjPjCbC5FDI0bLMBbQg5xLbVHKG',
+  TRUE,
+  TRUE,
+  'admin',
+  'admin'
+);
+
+-- ============================================
+-- DỮ LIỆU MẪU NEWS CATEGORIES
+-- ============================================
+INSERT INTO news_categories (name, slug, description, sort_order) VALUES
+('Tin tức', 'tin-tuc', 'Tin tức mới nhất', 1),
+('Kiến thức', 'kien-thuc', 'Kiến thức đầu tư, khởi nghiệp', 2),
+('Sự kiện', 'su-kien', 'Sự kiện sắp diễn ra', 3),
+('Phân tích', 'phan-tich', 'Phân tích thị trường', 4);
+
+SELECT '✅ Database reset thành công!' AS result;
+SELECT CONCAT('👤 Admin account: admin@consyf.com / Admin@123') AS info;
