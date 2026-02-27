@@ -1,13 +1,17 @@
-import 'dotenv/config';
-import express from 'express';
-import cors from 'cors';
+import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import multer from 'multer';
-import { router as apiRouter } from './routes/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Load .env from backend root (parent of src/)
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+
+import express from 'express';
+import cors from 'cors';
+import multer from 'multer';
+import { router as apiRouter } from './routes/index.js';
 
 const app = express();
 
