@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import multer from 'multer';
 import { router as apiRouter } from './routes/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -33,12 +34,31 @@ app.use(cors({
   maxAge: 600 // Cache preflight for 10 minutes
 }));
 
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 app.use('/api', apiRouter);
+
+// Multer error handler
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      res.status(400).json({ message: 'File quá lớn. Giới hạn 5MB.' });
+      return;
+    }
+    res.status(400).json({ message: `Upload error: ${err.message}` });
+    return;
+  }
+  if (err) {
+    console.error('Server error:', err);
+    res.status(500).json({ message: err.message || 'Internal server error' });
+    return;
+  }
+  next();
+});
 
 const port = Number(process.env.PORT || 4000);
 app.listen(port, () => {

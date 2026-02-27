@@ -5,6 +5,12 @@ const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000
 const url = new URL(backendUrl);
 
 const nextConfig: NextConfig = {
+  // Increase body size limit for file uploads through rewrites proxy
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
+  },
   async rewrites() {
     return [
       {
