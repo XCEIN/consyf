@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { ArrowLeft, Calendar, MapPin, Globe, Mail, Phone, Building, User } from "lucide-react";
 import ProjectCard from "@/components/shared/user/project-card";
+import { API_URL } from "@/constants/api.const";
 
 interface PostDetail {
   id: number;
@@ -69,7 +70,7 @@ export default function ProjectDetailClient({ projectId }: { projectId: string }
     const fetchPost = async () => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"}/api/posts/${projectId}`
+          `${API_URL}/api/posts/${projectId}`
         );
 
         if (!response.ok) {
@@ -81,7 +82,7 @@ export default function ProjectDetailClient({ projectId }: { projectId: string }
 
         // Fetch related posts
         const relatedResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"}/api/posts?category=${encodeURIComponent(data.post?.category || data.category)}&limit=4`
+          `${API_URL}/api/posts?category=${encodeURIComponent(data.post?.category || data.category)}&limit=4`
         );
         if (relatedResponse.ok) {
           const relatedData = await relatedResponse.json();

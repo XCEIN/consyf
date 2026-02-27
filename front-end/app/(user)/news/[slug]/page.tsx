@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import NewsDetailPage from "./news-detail";
+import { API_URL } from "@/constants/api.const";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -7,7 +8,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
+  const backendUrl = API_URL;
   
   try {
     const response = await fetch(`${backendUrl}/api/news/${slug}`, {

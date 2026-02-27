@@ -15,6 +15,7 @@ import {
   Loader2,
 } from "lucide-react";
 import axios from "axios";
+import { API_URL } from "@/constants/api.const";
 
 interface Category {
   id: number;
@@ -69,7 +70,7 @@ export default function CategoriesManagementSection() {
   const fetchCategories = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:4000/api/news-categories");
+      const response = await axios.get(`${API_URL}/api/news-categories`);
       setCategories(response.data.categories);
     } catch (error) {
       console.error("Fetch categories error:", error);
@@ -126,13 +127,13 @@ export default function CategoriesManagementSection() {
       
       if (editingId) {
         await axios.put(
-          `http://localhost:4000/api/news-categories/${editingId}`,
+          `${API_URL}/api/news-categories/${editingId}`,
           form,
           { headers: { Authorization: `Bearer ${token}` } }
         );
       } else {
         await axios.post(
-          "http://localhost:4000/api/news-categories",
+          `${API_URL}/api/news-categories`,
           form,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -154,7 +155,7 @@ export default function CategoriesManagementSection() {
     try {
       const token = localStorage.getItem("token");
       await axios.delete(
-        `http://localhost:4000/api/news-categories/${deleteModal.id}`,
+        `${API_URL}/api/news-categories/${deleteModal.id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setDeleteModal({ open: false, id: null });

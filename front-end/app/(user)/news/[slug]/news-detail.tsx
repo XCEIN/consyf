@@ -20,6 +20,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import axios from "axios";
+import { API_URL } from "@/constants/api.const";
 
 interface NewsDetail {
   id: number;
@@ -66,13 +67,13 @@ export default function NewsDetailPage({ slug }: NewsDetailPageProps) {
   const fetchNewsDetail = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:4000/api/news/${slug}`);
+      const response = await axios.get(`${API_URL}/api/news/${slug}`);
       setNews(response.data.news);
 
       // Fetch related news
       if (response.data.news.category) {
         const relatedResponse = await axios.get(
-          `http://localhost:4000/api/news?category=${response.data.news.category}&limit=4`
+          `${API_URL}/api/news?category=${response.data.news.category}&limit=4`
         );
         const filtered = relatedResponse.data.news.filter(
           (item: RelatedNews) => item.id !== response.data.news.id

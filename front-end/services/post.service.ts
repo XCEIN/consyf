@@ -1,6 +1,7 @@
 import http from "@/lib/http";
 
-const BASE = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000";
+import { API_URL } from "@/constants/api.const";
+const BASE = API_URL;
 
 export type PostType = 'buy' | 'sell';
 export type PostStatus = 'pending' | 'approved' | 'rejected';

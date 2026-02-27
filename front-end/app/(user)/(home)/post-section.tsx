@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import axios from "axios";
+import { API_URL } from "@/constants/api.const";
 
 interface FeaturedPost {
   id: number;
@@ -26,7 +27,7 @@ export default function PostSection() {
     const fetchFeaturedPosts = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:4000/api/news?featured=true&limit=6"
+          `${API_URL}/api/news?featured=true&limit=6`
         );
         setPosts(res.data.news || []);
       } catch (err) {

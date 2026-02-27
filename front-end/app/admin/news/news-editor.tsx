@@ -42,6 +42,7 @@ import {
   Type,
 } from "lucide-react";
 import axios from "axios";
+import { API_URL } from "@/constants/api.const";
 
 // ─── Types ───
 interface NewsEditorProps {
@@ -153,7 +154,7 @@ export default function NewsEditor({ mode, newsId }: NewsEditorProps) {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await axios.get("http://localhost:4000/api/news-categories");
+        const res = await axios.get(`${API_URL}/api/news-categories`);
         setCategories(res.data.categories || []);
       } catch (err) {
         console.error("Fetch categories error:", err);
@@ -168,7 +169,7 @@ export default function NewsEditor({ mode, newsId }: NewsEditorProps) {
 
   const fetchNewsData = async () => {
     try {
-      const res = await axios.get(`http://localhost:4000/api/news/admin/${newsId}`, {
+      const res = await axios.get(`${API_URL}/api/news/admin/${newsId}`, {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       const n = res.data.news;
@@ -211,7 +212,7 @@ export default function NewsEditor({ mode, newsId }: NewsEditorProps) {
       if (!slug) { setSlugAvailable(null); return; }
       try {
         const params = new URLSearchParams({ excludeId: newsId || "" });
-        const res = await axios.get(`http://localhost:4000/api/news/check-slug/${slug}?${params}`);
+        const res = await axios.get(`${API_URL}/api/news/check-slug/${slug}?${params}`);
         setSlugAvailable(res.data.available);
       } catch { setSlugAvailable(null); }
     },
@@ -263,7 +264,7 @@ export default function NewsEditor({ mode, newsId }: NewsEditorProps) {
     try {
       const fd = new FormData();
       fd.append("image", file);
-      const res = await axios.post("http://localhost:4000/api/news/upload-image", fd, {
+      const res = await axios.post(`${API_URL}/api/news/upload-image`, fd, {
         headers: { Authorization: `Bearer ${getToken()}`, "Content-Type": "multipart/form-data" },
       });
       exec("insertHTML", `<img src="${res.data.url}" alt="${file.name}" style="max-width:100%;height:auto;border-radius:0.5em;margin:1em 0;" />`);
@@ -283,7 +284,7 @@ export default function NewsEditor({ mode, newsId }: NewsEditorProps) {
     try {
       const fd = new FormData();
       fd.append("image", file);
-      const res = await axios.post("http://localhost:4000/api/news/upload-image", fd, {
+      const res = await axios.post(`${API_URL}/api/news/upload-image`, fd, {
         headers: { Authorization: `Bearer ${getToken()}`, "Content-Type": "multipart/form-data" },
       });
       setNewsData((prev) => ({ ...prev, thumbnail: res.data.url }));
@@ -297,7 +298,7 @@ export default function NewsEditor({ mode, newsId }: NewsEditorProps) {
   const fetchMediaLibrary = async () => {
     setLoadingMedia(true);
     try {
-      const res = await axios.get("http://localhost:4000/api/news/media-library", {
+      const res = await axios.get(`${API_URL}/api/news/media-library`, {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       setMediaImages(res.data.images || []);
@@ -322,7 +323,7 @@ export default function NewsEditor({ mode, newsId }: NewsEditorProps) {
       for (const file of Array.from(files)) {
         const fd = new FormData();
         fd.append("image", file);
-        await axios.post("http://localhost:4000/api/news/upload-image", fd, {
+        await axios.post(`${API_URL}/api/news/upload-image`, fd, {
           headers: { Authorization: `Bearer ${getToken()}`, "Content-Type": "multipart/form-data" },
         });
       }
@@ -349,7 +350,7 @@ export default function NewsEditor({ mode, newsId }: NewsEditorProps) {
   const handleMediaDelete = async (filename: string) => {
     if (!confirm("Bạn có chắc chắn muốn xóa ảnh này?")) return;
     try {
-      await axios.delete(`http://localhost:4000/api/news/media-library/${filename}`, {
+      await axios.delete(`${API_URL}/api/news/media-library/${filename}`, {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       fetchMediaLibrary();
@@ -372,12 +373,12 @@ export default function NewsEditor({ mode, newsId }: NewsEditorProps) {
       const payload = { ...newsData, content, published: publish !== undefined ? publish : newsData.published };
 
       if (mode === "create") {
-        await axios.post("http://localhost:4000/api/news", payload, {
+        await axios.post(`${API_URL}/api/news`, payload, {
           headers: { Authorization: `Bearer ${getToken()}` },
         });
         alert("Tạo bài viết thành công!");
       } else {
-        await axios.put(`http://localhost:4000/api/news/${newsId}`, payload, {
+        await axios.put(`${API_URL}/api/news/${newsId}`, payload, {
           headers: { Authorization: `Bearer ${getToken()}` },
         });
         alert("Cập nhật bài viết thành công!");
@@ -608,7 +609,7 @@ export default function NewsEditor({ mode, newsId }: NewsEditorProps) {
                     const fd = new FormData();
                     fd.append("image", files[0]);
                     try {
-                      const res = await axios.post("http://localhost:4000/api/news/upload-image", fd, {
+                      const res = await axios.post(`${API_URL}/api/news/upload-image`, fd, {
                         headers: { Authorization: `Bearer ${getToken()}`, "Content-Type": "multipart/form-data" },
                       });
                       exec("insertHTML", `<img src="${res.data.url}" alt="${files[0].name}" style="max-width:100%;height:auto;border-radius:0.5em;margin:1em 0;" />`);

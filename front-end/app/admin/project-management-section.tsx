@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { API_URL } from "@/constants/api.const";
 
 type StatusFilter = 'all' | 'pending' | 'approved' | 'rejected';
 
@@ -166,7 +167,7 @@ export default function ProjectManagementSection() {
                       <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden flex-shrink-0">
                         {post.user_avatar ? (
                           <img
-                            src={post.user_avatar.startsWith('http') ? post.user_avatar : `http://localhost:4000${post.user_avatar}`}
+                            src={post.user_avatar.startsWith('http') ? post.user_avatar : `${API_URL}{post.user_avatar}`}
                             alt={post.user_name || "User"}
                             className="w-full h-full object-cover"
                           />

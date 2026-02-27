@@ -15,6 +15,7 @@ import Image from "next/image";
 import useWindowSize from "@/contexts/window-size.context";
 import ImageIcon from "@/components/shared/image-icon";
 import ButtonEdit from "@/components/shared/user/edit-button";
+import { API_URL } from "@/constants/api.const";
 
 type TabType = "project" | "notification" | "manage-projects";
 const TabText: Record<TabType, string> = {
@@ -58,7 +59,7 @@ export default function ProfilePageClient() {
         }
 
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"}/api/profile`,
+          `${API_URL}/api/profile`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

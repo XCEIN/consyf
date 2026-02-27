@@ -14,6 +14,7 @@ import {
   Clock,
 } from "lucide-react";
 import axios from "axios";
+import { API_URL } from "@/constants/api.const";
 
 interface NewsItem {
   id: number;
@@ -60,7 +61,7 @@ export default function NewsListPage() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/api/news-categories");
+        const response = await axios.get(`${API_URL}/api/news-categories`);
         setCategories(response.data.categories);
       } catch (error) {
         console.error("Fetch categories error:", error);
@@ -82,7 +83,7 @@ export default function NewsListPage() {
       }
 
       const response = await axios.get(
-        `http://localhost:4000/api/news?${params}`
+        `${API_URL}/api/news?${params}`
       );
 
       setNews(response.data.news);

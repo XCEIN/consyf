@@ -8,6 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect, Suspense } from "react";
+import { API_URL } from "@/constants/api.const";
 
 function ResetPasswordForm() {
   const searchParams = useSearchParams();
@@ -64,7 +65,7 @@ function ResetPasswordForm() {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"}/api/auth/reset-password`,
+        `${API_URL}/api/auth/reset-password`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

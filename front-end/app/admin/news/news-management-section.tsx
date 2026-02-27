@@ -19,6 +19,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import axios from "axios";
+import { API_URL } from "@/constants/api.const";
 
 interface NewsItem {
   id: number;
@@ -84,7 +85,7 @@ export default function NewsManagementSection() {
       }
 
       const response = await axios.get(
-        `http://localhost:4000/api/news/admin/all?${params}`,
+        `${API_URL}/api/news/admin/all?${params}`,
         {
           headers: { Authorization: `Bearer ${authToken}` },
         }
@@ -113,7 +114,7 @@ export default function NewsManagementSection() {
     try {
       const authToken = localStorage.getItem("token");
       await axios.put(
-        `http://localhost:4000/api/news/${newsId}`,
+        `${API_URL}/api/news/${newsId}`,
         { published: !currentStatus },
         { headers: { Authorization: `Bearer ${authToken}` } }
       );
@@ -128,7 +129,7 @@ export default function NewsManagementSection() {
     try {
       const authToken = localStorage.getItem("token");
       await axios.put(
-        `http://localhost:4000/api/news/${newsId}`,
+        `${API_URL}/api/news/${newsId}`,
         { featured: !currentStatus },
         { headers: { Authorization: `Bearer ${authToken}` } }
       );
@@ -143,7 +144,7 @@ export default function NewsManagementSection() {
     if (!deleteModal.newsId) return;
     try {
       const authToken = localStorage.getItem("token");
-      await axios.delete(`http://localhost:4000/api/news/${deleteModal.newsId}`, {
+      await axios.delete(`${API_URL}/api/news/${deleteModal.newsId}`, {
         headers: { Authorization: `Bearer ${authToken}` },
       });
       setDeleteModal({ open: false, newsId: null });

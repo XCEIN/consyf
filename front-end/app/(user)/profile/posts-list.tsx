@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { API_URL } from "@/constants/api.const";
 
 interface Post {
   id: number;
@@ -34,7 +35,7 @@ export default function PostsList() {
         if (!token) return;
 
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"}/api/posts/user/my`,
+          `${API_URL}/api/posts/user/my`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -85,7 +86,7 @@ export default function PostsList() {
       if (!token) return;
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"}/api/posts/${postId}`,
+        `${API_URL}/api/posts/${postId}`,
         {
           method: "DELETE",
           headers: {

@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { CloudUpload, X, Image as ImageIcon } from "lucide-react";
+import { API_URL } from "@/constants/api.const";
 
 const CATEGORIES = [
   "Công nghệ",
@@ -130,7 +131,7 @@ export default function ProjectSection({ accountType }: { accountType?: string }
 
         // Get user's own posts
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"}/api/posts/user/my`,
+          `${API_URL}/api/posts/user/my`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -296,7 +297,7 @@ export default function ProjectSection({ accountType }: { accountType?: string }
       let companyId;
       try {
         const companiesResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"}/api/companies/my`,
+          `${API_URL}/api/companies/my`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -316,7 +317,7 @@ export default function ProjectSection({ accountType }: { accountType?: string }
 
       if (!companyId) {
         const createCompanyResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"}/api/companies`,
+          `${API_URL}/api/companies`,
           {
             method: "POST",
             headers: {
@@ -356,7 +357,7 @@ export default function ProjectSection({ accountType }: { accountType?: string }
         });
 
         const uploadResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"}/api/posts/upload-images`,
+          `${API_URL}/api/posts/upload-images`,
           {
             method: "POST",
             headers: {
@@ -409,7 +410,7 @@ export default function ProjectSection({ accountType }: { accountType?: string }
       if (isEditMode && existingPostId) {
         // Update existing post
         response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"}/api/posts/${existingPostId}`,
+          `${API_URL}/api/posts/${existingPostId}`,
           {
             method: "PUT",
             headers: {
@@ -422,7 +423,7 @@ export default function ProjectSection({ accountType }: { accountType?: string }
       } else {
         // Create new post
         response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"}/api/posts`,
+          `${API_URL}/api/posts`,
           {
             method: "POST",
             headers: {
@@ -475,7 +476,7 @@ export default function ProjectSection({ accountType }: { accountType?: string }
       // Reload posts list for organization
       if (isOrganization) {
         const postsResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"}/api/posts/user/my`,
+          `${API_URL}/api/posts/user/my`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

@@ -7,6 +7,7 @@ import Link from "next/link";
 import Input from "@/components/commons/input";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { API_URL } from "@/constants/api.const";
 
 export default function VerifyPageClient() {
   const router = useRouter();
@@ -57,7 +58,7 @@ export default function VerifyPageClient() {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/auth/verify-email`, {
+      const response = await fetch(`${API_URL}/api/auth/verify-email`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp: otpCode }),
@@ -97,7 +98,7 @@ export default function VerifyPageClient() {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'}/api/auth/resend-otp`, {
+      const response = await fetch(`${API_URL}/api/auth/resend-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),

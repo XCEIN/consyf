@@ -7,6 +7,7 @@ import Button from "@/components/commons/button";
 import Link from "next/link";
 import Image from "next/image";
 import { User, LogOut, Bell, X } from "lucide-react";
+import { API_URL } from "@/constants/api.const";
 
 interface Notification {
   id: number;
@@ -58,7 +59,7 @@ export default function UserHeader({
       const fetchNotifications = async () => {
         try {
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"}/api/notifications`,
+            `${API_URL}/api/notifications`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -104,7 +105,7 @@ export default function UserHeader({
       if (!token) return;
 
       await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"}/api/notifications/${id}/read`,
+        `${API_URL}/api/notifications/${id}/read`,
         {
           method: "PUT",
           headers: {

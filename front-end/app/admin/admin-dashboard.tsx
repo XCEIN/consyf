@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ProjectManagementSection from "./project-management-section";
 import { FileText, FolderKanban, Newspaper, ExternalLink } from "lucide-react";
+import { API_URL } from "@/constants/api.const";
 
 type TabType = "projects" | "news";
 
@@ -49,7 +50,7 @@ export default function AdminDashboardClient() {
             <div className="w-[60px] h-[60px] relative rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
               {user.avatar ? (
                 <img
-                  src={user.avatar.startsWith('http') ? user.avatar : `http://localhost:4000${user.avatar}`}
+                  src={user.avatar.startsWith('http') ? user.avatar : `${API_URL}{user.avatar}`}
                   alt={user.name}
                   className="w-full h-full object-cover"
                 />

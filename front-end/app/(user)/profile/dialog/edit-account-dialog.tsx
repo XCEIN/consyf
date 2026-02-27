@@ -10,6 +10,7 @@ import InputDropdown, {
   Option as InputDropdownOption,
 } from "@/components/shared/form/input-dropdown";
 import { AccountData } from "../profile";
+import { API_URL } from "@/constants/api.const";
 
 const accountTypes: InputDropdownOption[] = [
   { id: 1, value: "personal", label: "Cá nhân" },
@@ -95,7 +96,7 @@ export default function EditAccountDialog({
         formData.append("avatar", avatar);
 
         const uploadResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"}/api/profile/avatar`,
+          `${API_URL}/api/profile/avatar`,
           {
             method: "POST",
             headers: {
@@ -125,7 +126,7 @@ export default function EditAccountDialog({
       }
       
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"}/api/profile`,
+        `${API_URL}/api/profile`,
         {
           method: "PUT",
           headers: {

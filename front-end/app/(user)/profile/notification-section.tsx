@@ -3,6 +3,7 @@
 import ImageIcon from "@/components/shared/image-icon";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
+import { API_URL } from "@/constants/api.const";
 
 type ProjectStatus = "uploaded" | "failed" | "success";
 interface Notification {
@@ -62,7 +63,7 @@ export default function NotificationSection() {
       if (!token) return;
 
       await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"}/api/notifications/${id}/read`,
+        `${API_URL}/api/notifications/${id}/read`,
         {
           method: "PUT",
           headers: {
@@ -87,7 +88,7 @@ export default function NotificationSection() {
       if (!token) return;
 
       await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"}/api/notifications/read-all`,
+        `${API_URL}/api/notifications/read-all`,
         {
           method: "PUT",
           headers: {
@@ -111,7 +112,7 @@ export default function NotificationSection() {
         if (!token) return;
 
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000"}/api/notifications`,
+          `${API_URL}/api/notifications`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
