@@ -14,14 +14,17 @@ const __dirname = path.dirname(__filename);
 
 const router = Router();
 
-// Helper function to convert relative paths to full URLs
-const getFullImageUrl = (relativePath: string | null): string | null => {
+// Helper function to get image URL - returns relative path for proxy compatibility
+const getImageUrl = (relativePath: string | null): string | null => {
   if (!relativePath) return null;
   if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
-    return relativePath; // Already full URL
+    const localhostPattern = /^https?:\/\/localhost:\d+/;
+    if (localhostPattern.test(relativePath)) {
+      return relativePath.replace(localhostPattern, '');
+    }
+    return relativePath;
   }
-  const backendUrl = process.env.BACKEND_URL || 'http://localhost:4000';
-  return `${backendUrl}${relativePath}`;
+  return relativePath;
 };
 
 // Setup multer for post images upload
@@ -153,7 +156,7 @@ router.get('/', async (req, res) => {
     // Convert relative image paths to full URLs
     const postsWithFullUrls = rows.map((post: any) => ({
       ...post,
-      post_image: getFullImageUrl(post.post_image),
+      post_image: getImageUrl(post.post_image),
     }));
     
     res.json({
@@ -182,16 +185,13 @@ router.post('/upload-images', authenticateToken, upload.fields([
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
     const result: { post_image?: string; description_images?: string[] } = {};
     
-    // Get backend URL from environment or use default
-    const backendUrl = process.env.BACKEND_URL || 'http://localhost:4000';
-    
     if (files.post_image && files.post_image[0]) {
-      result.post_image = `${backendUrl}/uploads/posts/${files.post_image[0].filename}`;
+      result.post_image = `/uploads/posts/${files.post_image[0].filename}`;
     }
     
     if (files.description_images) {
       result.description_images = files.description_images.map(
-        file => `${backendUrl}/uploads/posts/${file.filename}`
+        file => `/uploads/posts/${file.filename}`
       );
     }
     
@@ -226,8 +226,8 @@ router.get('/:id', async (req, res) => {
     }
     
     // Convert image paths to full URLs
-    post.post_image = getFullImageUrl(post.post_image);
-    post.user_avatar = getFullImageUrl(post.user_avatar);
+    post.post_image = getImageUrl(post.post_image);
+    post.user_avatar = getImageUrl(post.user_avatar);
     
     res.json({ post });
   } catch (error) {
@@ -257,7 +257,7 @@ router.get('/user/my', authenticateToken, async (req: AuthRequest, res) => {
     // @ts-ignore
     const posts = (rows as any[]).map(post => ({
       ...post,
-      post_image: getFullImageUrl(post.post_image),
+      post_image: getImageUrl(post.post_image),
       // description_images is JSON string, keep as is (will be converted in frontend or when displaying)
     }));
     
@@ -464,7 +464,7 @@ router.get('/admin/all', authenticateToken, async (req: AuthRequest, res) => {
     // Convert relative image paths to full URLs
     const postsWithFullUrls = rows.map((post: any) => ({
       ...post,
-      post_image: getFullImageUrl(post.post_image),
+      post_image: getImageUrl(post.post_image),
     }));
     
     res.json({

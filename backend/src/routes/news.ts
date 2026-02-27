@@ -44,14 +44,20 @@ const upload = multer({
   }
 });
 
-// Helper function to get full image URL
-const getFullImageUrl = (relativePath: string | null): string | null => {
+// Helper function to get image URL - returns relative path for proxy compatibility
+const getImageUrl = (relativePath: string | null): string | null => {
   if (!relativePath) return null;
+  // If already a full URL, return as-is
   if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
+    // Convert absolute localhost URLs to relative paths
+    const localhostPattern = /^https?:\/\/localhost:\d+/;
+    if (localhostPattern.test(relativePath)) {
+      return relativePath.replace(localhostPattern, '');
+    }
     return relativePath;
   }
-  const backendUrl = process.env.BACKEND_URL || 'http://localhost:4000';
-  return `${backendUrl}${relativePath}`;
+  // Already a relative path like /uploads/news/...
+  return relativePath;
 };
 
 // Upload image for news content
@@ -64,7 +70,7 @@ router.post('/upload-image', authenticateToken, requireAdmin, upload.single('ima
     const imageUrl = `/uploads/news/${req.file.filename}`;
     res.json({ 
       success: true,
-      url: getFullImageUrl(imageUrl),
+      url: getImageUrl(imageUrl),
       path: imageUrl,
       filename: req.file.filename,
       size: req.file.size,
@@ -85,7 +91,7 @@ router.get('/media-library', authenticateToken, requireAdmin, async (req: AuthRe
         const stats = fs.statSync(filePath);
         return {
           filename,
-          url: getFullImageUrl(`/uploads/news/${filename}`),
+          url: getImageUrl(`/uploads/news/${filename}`),
           path: `/uploads/news/${filename}`,
           size: stats.size,
           created_at: stats.birthtime,
@@ -178,7 +184,7 @@ router.get('/admin/all', authenticateToken, requireAdmin, async (req: AuthReques
     // @ts-ignore
     const newsWithUrls = news.map((item: any) => ({
       ...item,
-      thumbnail: getFullImageUrl(item.thumbnail)
+      thumbnail: getImageUrl(item.thumbnail)
     }));
     
     res.json({
@@ -214,7 +220,7 @@ router.get('/admin/:id', authenticateToken, requireAdmin, async (req: AuthReques
     
     // @ts-ignore
     const newsItem = news[0];
-    newsItem.thumbnail = getFullImageUrl(newsItem.thumbnail);
+    newsItem.thumbnail = getImageUrl(newsItem.thumbnail);
     
     res.json({ news: newsItem });
   } catch (error) {
@@ -295,8 +301,8 @@ router.get('/', async (req, res) => {
     // @ts-ignore
     const newsWithUrls = news.map((item: any) => ({
       ...item,
-      thumbnail: getFullImageUrl(item.thumbnail),
-      og_image: getFullImageUrl(item.og_image)
+      thumbnail: getImageUrl(item.thumbnail),
+      og_image: getImageUrl(item.og_image)
     }));
 
     res.json({
@@ -340,8 +346,8 @@ router.get('/:slug', async (req, res) => {
     
     // @ts-ignore
     const newsItem = news[0];
-    newsItem.thumbnail = getFullImageUrl(newsItem.thumbnail);
-    newsItem.og_image = getFullImageUrl(newsItem.og_image);
+    newsItem.thumbnail = getImageUrl(newsItem.thumbnail);
+    newsItem.og_image = getImageUrl(newsItem.og_image);
     
     res.json({ news: newsItem });
   } catch (error) {
