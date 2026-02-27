@@ -1,12 +1,33 @@
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load .env from backend root (parent of src/)
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
+// Try multiple paths to find .env
+const envPaths = [
+  path.resolve(__dirname, '../.env'),       // from src/ → backend/.env
+  path.resolve(__dirname, '../../.env'),     // in case tsx resolves differently
+  path.resolve(process.cwd(), '.env'),       // from working directory
+];
+
+let envLoaded = false;
+for (const envPath of envPaths) {
+  if (fs.existsSync(envPath)) {
+    console.log(`[dotenv] Loading .env from: ${envPath}`);
+    dotenv.config({ path: envPath });
+    envLoaded = true;
+    break;
+  } else {
+    console.log(`[dotenv] Not found: ${envPath}`);
+  }
+}
+if (!envLoaded) {
+  console.error('[dotenv] ❌ No .env file found! Trying default dotenv.config()...');
+  dotenv.config();
+}
 
 import express from 'express';
 import cors from 'cors';
